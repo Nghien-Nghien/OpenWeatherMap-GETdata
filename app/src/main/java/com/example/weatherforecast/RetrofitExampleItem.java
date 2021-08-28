@@ -1,25 +1,31 @@
 package com.example.weatherforecast;
 
-public class ExampleItem {
+public class RetrofitExampleItem {
     private String mDate;
-    private Double mTempAvr;
+    private Integer mTempAvr;
     private String mWeather;
+    private String mIcon;
 
-    public ExampleItem(String date, Double tempavr, String weather) {
+    public RetrofitExampleItem(String date, Integer tempavr, String weather, String icon) {
         mDate = date;
         mTempAvr = tempavr;
         mWeather = weather;
+        mIcon = icon;
     }
 
     public String getmDate() {
         return mDate;
     }
 
-    public Double getmTempAvr() {
+    public Integer getmTempAvr() {
         return mTempAvr;
     }
 
     public String getmWeather() {
         return mWeather;
+    }
+
+    public String getmIcon() {
+        return mIcon;
     }
 }

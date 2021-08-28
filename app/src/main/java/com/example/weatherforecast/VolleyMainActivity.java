@@ -26,10 +26,10 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 
-public class MainActivity extends AppCompatActivity {
+public class VolleyMainActivity extends AppCompatActivity {
     private RecyclerView mRecyclerView;
-    private ExampleAdapter mExampleAdapter;
-    private ArrayList<ExampleItem> mExampleList;
+    private VolleyExampleAdapter mVolleyExampleAdapter;
+    private ArrayList<VolleyExampleItem> mVolleyExampleList;
     private RequestQueue mRequestQueue;
 
     public TextView tvPlace;
@@ -39,7 +39,7 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_main);
+        setContentView(R.layout.volley_activity_main);
 
         mRecyclerView = findViewById(R.id.rvItems);
         mRecyclerView.setHasFixedSize(true);
@@ -49,14 +49,14 @@ public class MainActivity extends AppCompatActivity {
         btGet = findViewById(R.id.btGet);
         etPlace = findViewById(R.id.etPlace);
 
-        mExampleList = new ArrayList<>();
+        mVolleyExampleList = new ArrayList<>();
 
         mRequestQueue = Volley.newRequestQueue(this);
         btGet.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 if (etPlace.getText().toString().equals("")) {
-                    Toast.makeText(MainActivity.this, " Please input any place ", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(VolleyMainActivity.this, " Please input any place ", Toast.LENGTH_SHORT).show();
                 } else {
                     String getPlace = etPlace.getText().toString().toLowerCase().replaceAll("\\s", "");
                     parseJSON(getPlace);
@@ -66,7 +66,7 @@ public class MainActivity extends AppCompatActivity {
     }
 
     public void parseJSON(String getPlace) {
-        mExampleList.clear();
+        mVolleyExampleList.clear();
         String baseUrl = "https://api.openweathermap.org/data/2.5/forecast/daily?units=metric&cnt=7&appid=60c6fbeb4b93ac653c492ba806fc346d&q=";
         String URL = baseUrl + getPlace;
 
@@ -90,11 +90,11 @@ public class MainActivity extends AppCompatActivity {
                                 double tempAvr = (tempINlist.getDouble("min") + tempINlist.getDouble("max")) / 2;
                                 String weather = dataWeather.getString("description");
 
-                                mExampleList.add(new ExampleItem(transformedDate, tempAvr, weather));
+                                mVolleyExampleList.add(new VolleyExampleItem(transformedDate, tempAvr, weather));
                             }
 
-                            mExampleAdapter = new ExampleAdapter(MainActivity.this, mExampleList);
-                            mRecyclerView.setAdapter(mExampleAdapter);
+                            mVolleyExampleAdapter = new VolleyExampleAdapter(VolleyMainActivity.this, mVolleyExampleList);
+                            mRecyclerView.setAdapter(mVolleyExampleAdapter);
 
                         } catch (JSONException e) {
                             e.printStackTrace();
@@ -104,7 +104,7 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onErrorResponse(VolleyError error) {
                 error.printStackTrace();
-                Toast.makeText(MainActivity.this, " Maybe the place that you just typed don't exist on server or your character be wrong. Please recheck! ", Toast.LENGTH_LONG).show();
+                Toast.makeText(VolleyMainActivity.this, " Maybe the place that you just typed don't exist on server or your character be wrong. Please recheck! ", Toast.LENGTH_LONG).show();
 
             }
         });
