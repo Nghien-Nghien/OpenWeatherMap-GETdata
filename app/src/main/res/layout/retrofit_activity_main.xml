@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
@@ -12,7 +11,8 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginTop="10dp"
-        android:hint=" Type the place and touch on GET " />
+        android:hint="@string/edittextHint_Retrofit"
+        android:autofillHints="@string/thePlace" />
 
     <Button
         android:id="@+id/btGet"
@@ -22,7 +22,7 @@
         android:layout_marginStart="10dp"
         android:layout_marginTop="10dp"
         android:backgroundTint="#dcedc1"
-        android:text=" GET "
+        android:text="@string/buttonGET"
         android:textColor="#666666"
         android:textSize="20sp" />
 

@@ -2,6 +2,7 @@ package com.example.weatherforecast;
 
 import com.example.weatherforecast.retrofit.*;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -16,6 +17,7 @@ import android.widget.Toast;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -26,7 +28,7 @@ import retrofit2.converter.gson.GsonConverterFactory;
 public class RetrofitMainActivity extends AppCompatActivity {
     private RecyclerView mRecyclerView;
     private RetrofitExampleAdapter mRetrofitExampleAdapter;
-    private ArrayList<RetrofitExampleItem> mRetrofitExampleList;
+    private List<RetrofitExampleItem> mRetrofitExampleList;
 
     public TextView tvPlace;
     public Button btGet;
@@ -46,43 +48,31 @@ public class RetrofitMainActivity extends AppCompatActivity {
         etPlace = findViewById(R.id.etPlace);
 
         mRetrofitExampleList = new ArrayList<>();
+        mRetrofitExampleAdapter = new RetrofitExampleAdapter(RetrofitMainActivity.this);
+        mRecyclerView.setAdapter(mRetrofitExampleAdapter);
 
-        btGet.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                if (etPlace.getText().toString().equals("")) {
-                    Toast.makeText(RetrofitMainActivity.this, " Please input any place ", Toast.LENGTH_SHORT).show();
-                } else {
-                    String getPlace = etPlace.getText().toString().toLowerCase().replaceAll("\\s", "");
-                    getDataInApi(getPlace);
-                }
-            }
-        });
+        buttonClickListener();
     }
 
     public void getDataInApi(String getPlace) {
-        mRetrofitExampleList.clear(); //Avoid duplicating data displayed on RecyclerView everytime do request
 
-        Retrofit retrofit = new Retrofit.Builder()
-                .baseUrl("https://api.openweathermap.org/data/2.5/forecast/")
-                .addConverterFactory(GsonConverterFactory.create())
-                .build();
+        APIInterface apiInterface = retrofit().create(APIInterface.class);
 
-        APIInterface apiInterface = retrofit.create(APIInterface.class);
+        Call<WeatherMapAPI> call = apiInterface.getDataInApi(getPlace);
 
-        Call<DataInApi> call = apiInterface.getDataInApi(getPlace);
-
-        call.enqueue(new Callback<DataInApi>() {
+        call.enqueue(new Callback<WeatherMapAPI>() {
             @Override
-            public void onResponse(Call<DataInApi> call, Response<DataInApi> response) {
+            public void onResponse(@NonNull Call<WeatherMapAPI> call, @NonNull Response<WeatherMapAPI> response) {
                 if (response.isSuccessful()) {
 
-                    DataInApi cityName = response.body();
+                    WeatherMapAPI cityName = response.body();
+                    assert cityName != null;
                     tvPlace.setText(cityName.getCity().getName());
 
-                    ArrayList<List> listArray = response.body().getList();
+                    assert response.body() != null;
+                    List<ListResponse> listArray = response.body().getList();
                     for (int i = 0; i < listArray.size(); i++) {
-                        List list = listArray.get(i);
+                        ListResponse list = listArray.get(i);
 
                         long date = list.getDate();
                         String transformedDate = new SimpleDateFormat("dd MMM yyyy  hh:mm").format(new Date(date * 1000));
@@ -94,11 +84,10 @@ public class RetrofitMainActivity extends AppCompatActivity {
 
                         String weatherIcon = list.getWeather().get(0).getIcon();
 
-                        mRetrofitExampleList.add(new RetrofitExampleItem(transformedDate, transformedTempAvr, weatherDescription, weatherIcon));
+                        mRetrofitExampleList.add(new RetrofitExampleItem(transformedDate,transformedTempAvr,weatherDescription,weatherIcon));
                     }
+                    mRetrofitExampleAdapter.refreshExampleList(mRetrofitExampleList);
 
-                    mRetrofitExampleAdapter = new RetrofitExampleAdapter(RetrofitMainActivity.this, mRetrofitExampleList);
-                    mRecyclerView.setAdapter(mRetrofitExampleAdapter);
                 } else {
                     tvPlace.setText(" Error ");
                     Toast.makeText(RetrofitMainActivity.this, " Maybe the place that you just typed don't exist on server or your character be wrong. Please recheck! ", Toast.LENGTH_LONG).show();
@@ -106,9 +95,27 @@ public class RetrofitMainActivity extends AppCompatActivity {
             }
 
             @Override
-            public void onFailure(Call<DataInApi> call, Throwable throwable) {
+            public void onFailure(@NonNull Call<WeatherMapAPI> call, @NonNull Throwable throwable) {
                 tvPlace.setText(throwable.getMessage());
             }
         });
+    }
+
+    public void buttonClickListener () {
+        btGet.setOnClickListener(view -> {
+            if (etPlace.getText().toString().equals("")) {
+                Toast.makeText(RetrofitMainActivity.this, " Please input any place ", Toast.LENGTH_SHORT).show();
+            } else {
+                String getPlace = etPlace.getText().toString().toLowerCase().replaceAll("\\s", "");
+                getDataInApi(getPlace);
+            }
+        });
+    }
+
+    public Retrofit retrofit() {
+        return new Retrofit.Builder()
+                .baseUrl("https://api.openweathermap.org/data/2.5/forecast/")
+                .addConverterFactory(GsonConverterFactory.create())
+                .build();
     }
 }

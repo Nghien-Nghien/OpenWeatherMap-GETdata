@@ -4,7 +4,7 @@ import com.google.gson.annotations.SerializedName;
 
 import java.util.ArrayList;
 
-public class List {
+public class ListResponse {
     @SerializedName("dt")
     public long date;
 
@@ -12,7 +12,7 @@ public class List {
     public Temp temp;
 
     @SerializedName("weather")
-    public ArrayList<Weather> weather;
+    public ArrayList<WeatherResponse> weather;
 
     public long getDate() {
         return date;
@@ -22,7 +22,7 @@ public class List {
         return temp;
     }
 
-    public ArrayList<Weather> getWeather() {
+    public ArrayList<WeatherResponse> getWeather() {
         return weather;
     }
 }

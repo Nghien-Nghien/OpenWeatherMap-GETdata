@@ -1,10 +1,10 @@
 package com.example.weatherforecast;
 
 public class RetrofitExampleItem {
-    private String mDate;
-    private Integer mTempAvr;
-    private String mWeather;
-    private String mIcon;
+    private final String mDate;
+    private final Integer mTempAvr;
+    private final String mWeather;
+    private final String mIcon;
 
     public RetrofitExampleItem(String date, Integer tempavr, String weather, String icon) {
         mDate = date;

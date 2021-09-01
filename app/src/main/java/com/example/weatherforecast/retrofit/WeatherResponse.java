@@ -2,7 +2,7 @@ package com.example.weatherforecast.retrofit;
 
 import com.google.gson.annotations.SerializedName;
 
-public class Weather {
+public class WeatherResponse {
     @SerializedName("description")
     public String description;
 

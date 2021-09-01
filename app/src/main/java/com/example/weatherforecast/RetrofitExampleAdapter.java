@@ -7,23 +7,25 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;
+import java.util.List;
 
 public class RetrofitExampleAdapter extends RecyclerView.Adapter<RetrofitExampleAdapter.ExampleViewHolder> {
-    private Context mContext;
-    private ArrayList<RetrofitExampleItem> mExampleList;
+    private final Context mContext;
+    private final List<RetrofitExampleItem> mExampleList = new ArrayList<>();
 
-    public RetrofitExampleAdapter(Context context, ArrayList<RetrofitExampleItem> exampleList) {
+    public RetrofitExampleAdapter(Context context) {
         mContext = context;
-        mExampleList = exampleList;
     }
 
+    @NonNull
     @Override
-    public ExampleViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+    public ExampleViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         View view = LayoutInflater.from(mContext).inflate(R.layout.retrofit_example_item, parent, false);
         return new ExampleViewHolder(view);
     }
@@ -37,10 +39,16 @@ public class RetrofitExampleAdapter extends RecyclerView.Adapter<RetrofitExample
         String weather = item.getmWeather();
         String urlImage = "http://openweathermap.org/img/w/" + item.getmIcon() + ".png";
 
-        holder.mDate.setText("Date: " + date);
-        holder.mTempAvr.setText("Temp Avr: " + tempAvr + "°C");
-        holder.mWeather.setText("Weather: " + weather);
+        holder.mDate.setText(mContext.getResources().getString(R.string.info_Date,date));
+        holder.mTempAvr.setText(mContext.getResources().getString(R.string.info_Temp,tempAvr));
+        holder.mWeather.setText(mContext.getResources().getString(R.string.info_Weather,weather));
         Picasso.get().load(urlImage).into(holder.mIcon);
+    }
+
+    public void refreshExampleList(List<RetrofitExampleItem> mData) {
+        this.mExampleList.clear(); //Avoid duplicating data displayed on RecyclerView everytime do request
+        this.mExampleList.addAll(mData);
+        notifyDataSetChanged();
     }
 
     @Override
@@ -48,7 +56,7 @@ public class RetrofitExampleAdapter extends RecyclerView.Adapter<RetrofitExample
         return mExampleList.size();
     }
 
-    public class ExampleViewHolder extends RecyclerView.ViewHolder {
+    public static class ExampleViewHolder extends RecyclerView.ViewHolder {
         public TextView mDate;
         public TextView mTempAvr;
         public TextView mWeather;
