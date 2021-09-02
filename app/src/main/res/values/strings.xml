@@ -3,6 +3,7 @@
     <string name="edittextHint_Retrofit"> Type the place and touch on GET </string>
     <string name="thePlace">Sai Gon</string>
     <string name="buttonGET"> GET </string>
+    <string name="error"> Error </string>
     <string name="info_Date">Date: %s</string>
     <string name="info_Temp">Temp Avr: %d°C</string>
     <string name="info_Weather">Weather: %s</string>

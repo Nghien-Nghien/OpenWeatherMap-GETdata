@@ -48,7 +48,6 @@ public class RetrofitExampleAdapter extends RecyclerView.Adapter<RetrofitExample
     public void refreshExampleList(List<RetrofitExampleItem> mData) {
         this.mExampleList.clear(); //Avoid duplicating data displayed on RecyclerView everytime do request
         this.mExampleList.addAll(mData);
-        notifyDataSetChanged();
     }
 
     @Override

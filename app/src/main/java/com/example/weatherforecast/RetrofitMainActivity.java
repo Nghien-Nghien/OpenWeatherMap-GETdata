@@ -1,18 +1,20 @@
 package com.example.weatherforecast;
 
-import com.example.weatherforecast.retrofit.*;
+import android.annotation.SuppressLint;
+import android.os.Bundle;
+import android.widget.Button;
+import android.widget.EditText;
+import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-import android.os.Bundle;
-import android.view.View;
-import android.widget.Button;
-import android.widget.EditText;
-import android.widget.TextView;
-import android.widget.Toast;
+import com.example.weatherforecast.retrofit.APIInterface;
+import com.example.weatherforecast.retrofit.ListResponse;
+import com.example.weatherforecast.retrofit.WeatherMapAPI;
 
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -26,7 +28,6 @@ import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
 
 public class RetrofitMainActivity extends AppCompatActivity {
-    private RecyclerView mRecyclerView;
     private RetrofitExampleAdapter mRetrofitExampleAdapter;
     private List<RetrofitExampleItem> mRetrofitExampleList;
 
@@ -39,7 +40,7 @@ public class RetrofitMainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.retrofit_activity_main);
 
-        mRecyclerView = findViewById(R.id.rvItems);
+        RecyclerView mRecyclerView = findViewById(R.id.rvItems);
         mRecyclerView.setHasFixedSize(true);
         mRecyclerView.setLayoutManager(new LinearLayoutManager(this));
 
@@ -47,7 +48,7 @@ public class RetrofitMainActivity extends AppCompatActivity {
         btGet = findViewById(R.id.btGet);
         etPlace = findViewById(R.id.etPlace);
 
-        mRetrofitExampleList = new ArrayList<>();
+
         mRetrofitExampleAdapter = new RetrofitExampleAdapter(RetrofitMainActivity.this);
         mRecyclerView.setAdapter(mRetrofitExampleAdapter);
 
@@ -55,6 +56,7 @@ public class RetrofitMainActivity extends AppCompatActivity {
     }
 
     public void getDataInApi(String getPlace) {
+        mRetrofitExampleList = new ArrayList<>();
 
         APIInterface apiInterface = retrofit().create(APIInterface.class);
 
@@ -75,7 +77,7 @@ public class RetrofitMainActivity extends AppCompatActivity {
                         ListResponse list = listArray.get(i);
 
                         long date = list.getDate();
-                        String transformedDate = new SimpleDateFormat("dd MMM yyyy  hh:mm").format(new Date(date * 1000));
+                        @SuppressLint("SimpleDateFormat") String transformedDate = new SimpleDateFormat("dd MMM yyyy  hh:mm").format(new Date(date * 1000));
 
                         double tempAvr = (list.getTemp().getMin() + list.getTemp().getMax()) / 2;
                         int transformedTempAvr = (int) tempAvr;
@@ -89,7 +91,7 @@ public class RetrofitMainActivity extends AppCompatActivity {
                     mRetrofitExampleAdapter.refreshExampleList(mRetrofitExampleList);
 
                 } else {
-                    tvPlace.setText(" Error ");
+                    tvPlace.setText(getResources().getString(R.string.error));
                     Toast.makeText(RetrofitMainActivity.this, " Maybe the place that you just typed don't exist on server or your character be wrong. Please recheck! ", Toast.LENGTH_LONG).show();
                 }
             }
