@@ -12,15 +12,15 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.squareup.picasso.Picasso;
 
-import java.util.ArrayList;
 import java.util.List;
 
 public class RetrofitExampleAdapter extends RecyclerView.Adapter<RetrofitExampleAdapter.ExampleViewHolder> {
     private final Context mContext;
-    private final List<RetrofitExampleItem> mExampleList = new ArrayList<>();
+    private final List<RetrofitExampleItem> mExampleList;
 
-    public RetrofitExampleAdapter(Context context) {
+    public RetrofitExampleAdapter(Context context, List<RetrofitExampleItem> exampleList) {
         mContext = context;
+        mExampleList = exampleList;
     }
 
     @NonNull
@@ -45,10 +45,10 @@ public class RetrofitExampleAdapter extends RecyclerView.Adapter<RetrofitExample
         Picasso.get().load(urlImage).into(holder.mIcon);
     }
 
-    public void refreshExampleList(List<RetrofitExampleItem> mData) {
-        this.mExampleList.clear(); //Avoid duplicating data displayed on RecyclerView everytime do request
-        this.mExampleList.addAll(mData);
-    }
+//    public void refreshExampleList(List<RetrofitExampleItem> mData) {
+//        this.mExampleList.clear(); //Avoid duplicating data displayed on RecyclerView everytime do request
+//        this.mExampleList.addAll(mData);
+//    }
 
     @Override
     public int getItemCount() {
