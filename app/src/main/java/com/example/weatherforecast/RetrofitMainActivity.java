@@ -18,6 +18,7 @@ import java.util.List;
 public class RetrofitMainActivity extends AppCompatActivity implements Contract.View {
     private Presenter mPresenter;
     private RecyclerView mRecyclerView;
+    private RetrofitExampleAdapter mRetrofitExampleAdapter;
 
     public TextView tvPlace;
     public Button btGet;
@@ -36,26 +37,27 @@ public class RetrofitMainActivity extends AppCompatActivity implements Contract.
         btGet = findViewById(R.id.btGet);
         etPlace = findViewById(R.id.etPlace);
 
-        mPresenter = new Presenter(null, this);
+        mPresenter = new Presenter(this);
+        mPresenter.getDataInApi(getApplicationContext());
 
-        buttonClickListener();
+        mRetrofitExampleAdapter = new RetrofitExampleAdapter(RetrofitMainActivity.this);
+        mRecyclerView.setAdapter(mRetrofitExampleAdapter);
     }
 
-    public void buttonClickListener () {
-        btGet.setOnClickListener(view -> {
-            if (etPlace.getText().toString().equals("")) {
-                Toast.makeText(RetrofitMainActivity.this, " Please input any place ", Toast.LENGTH_SHORT).show();
-            } else {
-                //String getPlace = etPlace.getText().toString().toLowerCase().replaceAll("\\s", "");
-                mPresenter.getDataInApi(getApplicationContext());
-            }
-        });
-    }
+//    public void buttonClickListener () {
+//        btGet.setOnClickListener(view -> {
+//            if (etPlace.getText().toString().equals("")) {
+//                Toast.makeText(RetrofitMainActivity.this, " Please input any place ", Toast.LENGTH_SHORT).show();
+//            } else {
+//                //String getPlace = etPlace.getText().toString().toLowerCase().replaceAll("\\s", "");
+//                mPresenter.getDataInApi(getApplicationContext());
+//            }
+//        });
+//    }
 
     @Override
     public void onGetDataSuccessful(TextView tvPlace, List<RetrofitExampleItem> mRetrofitExampleList) {
-        RetrofitExampleAdapter mRetrofitExampleAdapter = new RetrofitExampleAdapter(RetrofitMainActivity.this, mRetrofitExampleList);
-        mRecyclerView.setAdapter(mRetrofitExampleAdapter);
+        mRetrofitExampleAdapter.refreshExampleList(mRetrofitExampleList);
     }
 
     @Override

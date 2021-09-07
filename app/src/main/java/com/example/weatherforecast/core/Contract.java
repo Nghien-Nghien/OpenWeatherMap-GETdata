@@ -19,8 +19,8 @@ public interface Contract {
     interface Model {
         APIInterface initRetrofitCallApi();
     }
-    interface onGetDataInApi {
-        void onSuccessful(TextView tvPlace, List<RetrofitExampleItem> mRetrofitExampleList);
-        void onFailure(TextView tvPlace);
-    }
+//    interface onGetDataInApi {
+//        void onSuccessful(TextView tvPlace, List<RetrofitExampleItem> mRetrofitExampleList);
+//        void onFailure(TextView tvPlace);
+//    }
 }

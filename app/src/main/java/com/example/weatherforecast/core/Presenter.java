@@ -21,16 +21,14 @@ import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
-public class Presenter extends AppCompatActivity implements Contract.Presenter, Contract.onGetDataInApi {
-    private final Contract.onGetDataInApi mOnGetDataInApi;
-    private final Contract.View mView;
-    private final Model model = new Model();
+public class Presenter extends AppCompatActivity implements Contract.Presenter {
+    private Contract.View mView;
+    private Model model = new Model();
 
     public List<RetrofitExampleItem> mRetrofitExampleList = new ArrayList<>();
     public TextView tvPlace;
 
-    public Presenter(Contract.onGetDataInApi mOnGetDataInApi, Contract.View mView) {
-        this.mOnGetDataInApi = mOnGetDataInApi;
+    public Presenter(Contract.View mView) {
         this.mView = mView;
     }
 
@@ -66,11 +64,11 @@ public class Presenter extends AppCompatActivity implements Contract.Presenter, 
                         mRetrofitExampleList.add(new RetrofitExampleItem(transformedDate,transformedTempAvr,weatherDescription,weatherIcon));
                     }
 
-                    mOnGetDataInApi.onSuccessful(tvPlace, mRetrofitExampleList);
+                    mView.onGetDataSuccessful(tvPlace, mRetrofitExampleList);
 
                 } else {
                     tvPlace.setText(getResources().getString(R.string.error));
-                    mOnGetDataInApi.onFailure(tvPlace);
+                    mView.onGetDataFailure(tvPlace);
                 }
             }
 
@@ -79,15 +77,5 @@ public class Presenter extends AppCompatActivity implements Contract.Presenter, 
                 tvPlace.setText(throwable.getMessage());
             }
         });
-    }
-
-    @Override
-    public void onSuccessful(TextView tvPlace, List<RetrofitExampleItem> mRetrofitExampleList) {
-        mView.onGetDataSuccessful(tvPlace, mRetrofitExampleList);
-    }
-
-    @Override
-    public void onFailure(TextView tvPlace) {
-        mView.onGetDataFailure(tvPlace);
     }
 }
