@@ -14,8 +14,6 @@ public class Model implements Contract.Model {
                 .addConverterFactory(GsonConverterFactory.create())
                 .build();
 
-        APIInterface apiInterface = retrofit.create(APIInterface.class);
-
-        return apiInterface;
+        return retrofit.create(APIInterface.class);
     }
 }
