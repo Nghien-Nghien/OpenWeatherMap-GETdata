@@ -1,4 +1,4 @@
-# OpenWeatherMap-GetData
+# OpenWeatherMapAPI
 Demo get some of data from OpenWeatherMap API. App coded by Java, has used Volley to parse Json.
 
 Demo: https://www.youtube.com/watch?v=PGvV_rNUFmo
